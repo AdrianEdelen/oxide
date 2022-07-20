@@ -11,13 +11,16 @@ use bootloader::{BootInfo, entry_point};
 
 //entry point into the os
 entry_point!(kernel_main);
-fn kernel_main(boot_info: &'static BootInfo) -> ! {
+fn kernel_main(_boot_info: &'static BootInfo) -> ! {
+    
+    //run tests only in test cfg.
     #[cfg(test)]
     test_main();
 
+    //run startup routines
     oxide::init();
-    //startup output
-
+    
+    //startup output // welcome screen
     println!("Hello Oxide!");
     println!("Enjoy Your Stay");
     println!();
@@ -56,16 +59,6 @@ fn trivial_assertion() {
     assert_eq!(1, 1);
 }
 
-#[test_case]
-fn test_println_simple(){
-    println!("test_println_simple output");
-}
 
-#[test_case]
-fn test_println_many() {
-    for _ in 0..200 {
-        println!("")
-    }
-}
 
 // endregion

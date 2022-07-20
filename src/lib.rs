@@ -12,7 +12,6 @@ pub mod gdt;
 pub mod memory;
 
 use core::panic::PanicInfo;
-use x86_64::structures::idt::InterruptDescriptorTable;
 
 /* Qemu dev setup
     Allows for easy use of qemu to facilitate development and create a consistent environment to run in
@@ -56,7 +55,7 @@ where
     T: Fn(),
 {
     fn run(&self) {
-        serial_print!("{}...\t", core::any::type_name::<T>());
+        serial_print!("{}... \t", core::any::type_name::<T>());
         self();
         serial_println!("[ok]");
     }

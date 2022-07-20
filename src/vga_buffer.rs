@@ -152,6 +152,18 @@ impl fmt::Write for Writer {
 // region: tests
 
 #[test_case]
+fn test_println_simple(){
+    println!("test_println_simple output");
+}
+
+#[test_case]
+fn test_println_many() {
+    for _ in 0..200 {
+        println!("")
+    }
+}
+
+#[test_case]
 fn test_println_output() {
     use core::fmt::Write;
     use x86_64::instructions::interrupts;
@@ -182,6 +194,8 @@ fn test_textwrap() {
     let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][0].read();
     assert_eq!(char::from(screen_char.ascii_character), 'z');
 }
+
+
 /* TESTING TODO */
 //colors
 //invalid characters
