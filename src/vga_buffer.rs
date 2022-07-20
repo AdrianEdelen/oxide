@@ -14,15 +14,22 @@ macro_rules! println {
     ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
 }
 
+// #[macro_export]
+// macro_rules! setcolor {
+//     () => ($crate::set_color(Color::White, Color::Black));
+//     ($($arg:tt)*) => ($crate::set_color())
+// }
+
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
     use x86_64::instructions::interrupts;
     interrupts::without_interrupts(|| {
         WRITER.lock().write_fmt(args).unwrap();
-
     });
 }
+
+
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -140,13 +147,18 @@ impl Writer {
             self.buffer.chars[row][col].write(blank);
         }
     }
+
+    fn set_color(&mut self, color_fg: Color, color_bg: Color) {
+        self.color_code = ColorCode::new(color_fg, color_bg);
+    }
+
 }
 
 impl fmt::Write for Writer {
     fn write_str(&mut self, s: &str) -> fmt::Result {
         self.write_string(s);
         Ok(())
-    }   
+    }      
 }
 
 // region: tests
