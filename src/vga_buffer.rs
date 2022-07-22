@@ -14,15 +14,6 @@ macro_rules! println {
     ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
 }
 
-#[macro_export]
-macro_rules! setcolor {
-    () => ($crate::vga_buffer::set_color(vga_buffer::Color::White, vga_buffer::Color::Black));
-    (color: ty, color2: ty) => {
-        println!("called into macro");
-        vga_buffer::set_color(color as Color, color2 as Color);
-    };
-}
-
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
@@ -31,15 +22,6 @@ pub fn _print(args: fmt::Arguments) {
         WRITER.lock().write_fmt(args).unwrap();
     });
 }
-
-pub fn set_color(color_fg: Color, color_bg: Color) {
-    println!("set_color");
-    use x86_64::instructions::interrupts;
-    interrupts::without_interrupts(|| {
-        WRITER.lock().set_color(color_fg, color_bg);
-    });
-}
-
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -157,17 +139,6 @@ impl Writer {
             self.buffer.chars[row][col].write(blank);
         }
     }
-
-    pub fn set_color(&mut self, color_fg: Color, color_bg: Color) {
-        println!("Changing Color");
-        self.color_code = ColorCode::new(color_fg, color_bg);
-    }
-
-    fn set_cursor_pos(&mut self, row: usize, col: usize) {
-        
-
-    }
-
     
 
 }

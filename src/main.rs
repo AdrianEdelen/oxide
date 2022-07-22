@@ -8,7 +8,7 @@ mod vga_buffer;
 mod serial;
 use core::panic::PanicInfo;
 use bootloader::{BootInfo, entry_point};
-use x86_64::structures::paging::PageTable;
+use x86_64::structures::paging::{PageTable, frame};
 
 
 // entry point into the os
@@ -29,7 +29,6 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
 
     let mut mapper = unsafe { memory::init(phys_mem_offset) };
     let mut frame_allocator = unsafe { BootInfoFrameAllocator::init(&&boot_info.memory_map)};
-
     //let page = Page::containing_address(VirtAddr::new(0));
     //memory::create_example_mapping(page, &mut mapper, &mut frame_allocator);
 
@@ -48,17 +47,16 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     //     let phys =  mapper.translate_addr(virt);
     //     println!("{:?} -> {:?}", virt, phys);
     // }
-    
 
     /******************************/
 
     //run tests only in test cfg.
     #[cfg(test)]
     test_main();
-    use oxide::vga_buffer::Color;
-    use oxide::vga_buffer;
+    // use oxide::vga_buffer::Color;
+    // use oxide::vga_buffer;
     
-    setcolor!(Color::Black, Color::White);
+    // setcolor!(Color::Black, Color::White);
     
     //set_color(Color::Blue, Color::Green);
     //startup output // welcome screen
